@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Piano</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .piano {
+            display: flex;
+            position: relative;
+        }
+        .key {
+            width: 60px;
+            height: 200px;
+            border: 1px solid #000;
+            background-color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 10px;
+            font-size: 14px;
+            user-select: none;
+            position: relative;
+        }
+        .key.black {
+            width: 40px;
+            height: 120px;
+            background-color: black;
+            color: white;
+            position: absolute;
+            top: 0;
+            z-index: 1;
+        }
+        .key.active {
+            background-color: #ccc; /* Highlight key when pressed */
+        }
+        .key.black.active {
+            background-color: #555; /* Highlight black key when pressed */
+        }
+    </style>
+</head>
+<body>
+    <div class="piano">
+        <!-- White Keys -->
+        <div class="key" data-note="C0" data-key="a">C0</div>
+        <div class="key" data-note="D0" data-key="s">D0</div>
+        <div class="key" data-note="E0" data-key="d">E0</div>
+        <div class="key" data-note="F0" data-key="f">F0</div>
+        <div class="key" data-note="G0" data-key="g">G0</div>
+        <div class="key" data-note="A0" data-key="h">A0</div>
+        <div class="key" data-note="B0" data-key="j">B0</div>
+        <div class="key" data-note="C1" data-key="k">C1</div>
+        <div class="key" data-note="D1" data-key="l">D1</div>
+        <div class="key" data-note="E1" data-key="m">E1</div>
+        <div class="key" data-note="F1" data-key="n">F1</div>
+        <div class="key" data-note="G1" data-key="o">G1</div>
+        <div class="key" data-note="A1" data-key="p">A1</div>
+        <div class="key" data-note="B1" data-key="q">B1</div>
+        <div class="key" data-note="C2" data-key="r">C2</div>
+        <div class="key" data-note="D2" data-key="t">D2</div>
+        <div class="key" data-note="E2" data-key="u">E2</div>
+        <div class="key" data-note="F2" data-key="v">F2</div>
+        <div class="key" data-note="G2" data-key="w">G2</div>
+        <div class="key" data-note="A2" data-key="x">A2</div>
+        <div class="key" data-note="B2" data-key="y">B2</div>
+        <div class="key" data-note="C3" data-key="z">C3</div>
+        <div class="key" data-note="D3" data-key="1">D3</div>
+        <div class="key" data-note="E3" data-key="2">E3</div>
+        <div class="key" data-note="F3" data-key="3">F3</div>
+        <div class="key" data-note="G3" data-key="4">G3</div>
+        <div class="key" data-note="A3" data-key="5">A3</div>
+        <div class="key" data-note="B3" data-key="6">B3</div>
+
+        <!-- Black Keys -->
+        <div class="key black" data-note="C#0" data-key="7" style="left: 45px;">C#0</div>
+        <div class="key black" data-note="D#0" data-key="8" style="left: 105px;">D#0</div>
+        <div class="key black" data-note="F#0" data-key="9" style="left: 225px;">F#0</div>
+        <div class="key black" data-note="G#0" data-key="0" style="left: 285px;">G#0</div>
+        <div class="key black" data-note="A#0" data-key="`" style="left: 345px;">A#0</div>
+        <div class="key black" data-note="C#1" data-key="~" style="left: 465px;">C#1</div>
+        <div class="key black" data-note="D#1" data-key="!" style="left: 525px;">D#1</div>
+        <div class="key black" data-note="F#1" data-key="@" style="left: 645px;">F#1</div>
+        <div class="key black" data-note="G#1" data-key="#" style="left: 705px;">G#1</div>
+        <div class="key black" data-note="A#1" data-key="$" style="left: 765px;">A#1</div>
+        <div class="key black" data-note="C#2" data-key="%" style="left: 885px;">C#2</div>
+        <div class="key black" data-note="D#2" data-key="^" style="left: 945px;">D#2</div>
+        <div class="key black" data-note="F#2" data-key="&" style="left: 1065px;">F#2</div>
+        <div class="key black" data-note="G#2" data-key="*" style="left: 1125px;">G#2</div>
+        <div class="key black" data-note="A#2" data-key="(" style="left: 1185px;">A#2</div>
+        <div class="key black" data-note="C#3" data-key=")" style="left: 1305px;">C#3</div>
+        <div class="key black" data-note="D#3" data-key="_" style="left: 1365px;">D#3</div>
+        <div class="key black" data-note="F#3" data-key="+" style="left: 1485px;">F#3</div>
+        <div class="key black" data-note="G#3" data-key="=" style="left: 1545px;">G#3</div>
+        <div class="key black" data-note="A#3" data-key="{" style="left: 1605px;">A#3</div>
+    </div>
+
+    <script>
+        // Map keyboard keys to piano notes
+        const keyMap = {
+            'a': 'C0',
+            's': 'D0',
+            'd': 'E0',
+            'f': 'F0',
+            'g': 'G0',
+            'h': 'A0',
+            'j': 'B0',
+            'k': 'C1',
+            'l': 'D1',
+            'm': 'E1',
+            'n': 'F1',
+            'o': 'G1',
+            'p': 'A1',
+            'q': 'B1',
+            'r': 'C2',
+            't': 'D2',
+            'u': 'E2',
+            'v': 'F2',
+            'w': 'G2',
+            'x': 'A2',
+            'y': 'B2',
+            'z': 'C3',
+            '1': 'D3',
+            '2': 'E3',
+            '3': 'F3',
+            '4': 'G3',
+            '5': 'A3',
+            '6': 'B3',
+            '7': 'C#0',
+            '8': 'D#0',
+            '9': 'F#0',
+            '0': 'G#0',
+            '`': 'A#0',
+            '~': 'C#1',
+            '!': 'D#1',
+            '@': 'F#1',
+            '#': 'G#1',
+            '$': 'A#1',
+            '%': 'C#2',
+            '^': 'D#2',
+            '&': 'F#2',
+            '*': 'G#2',
+            '(': 'A#2',
+            ')': 'C#3',
+            '_': 'D#3',
+            '+': 'F#3',
+            '=': 'G#3',
+            '{': 'A#3',
+        };
+
+        // Add event listeners for keyboard events
+        document.addEventListener('keydown', (event) => {
+            const note = keyMap[event.key];
+            if (note) {
+                playNote(note);
+                highlightKey(note);
+            }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            const note = keyMap[event.key];
+            if (note) {
+                stopNote(note);
+                removeHighlightKey(note);
+            }
+        });
+
+        // Function to play a note
+        function playNote(note) {
+            fetch('/play', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ note: note }),
+            });
+        }
+
+        // Function to stop a note
+        function stopNote(note) {
+            fetch('/stop', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ note: note }),
+            });
+        }
+
+        // Function to highlight the pressed key
+        function highlightKey(note) {
+            const keyElement = document.querySelector(`.key[data-note="${note}"]`);
+            if (keyElement) {
+                keyElement.classList.add('active');
+            }
+        }
+
+        // Function to remove highlight from the key
+        function removeHighlightKey(note) {
+            const keyElement = document.querySelector(`.key[data-note="${note}"]`);
+            if (keyElement) {
+                keyElement.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
