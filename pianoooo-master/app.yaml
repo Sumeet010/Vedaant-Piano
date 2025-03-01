@@ -1,0 +1,8 @@
+name: piano-app
+services:
+- name: web
+  github:
+    branch: main
+    deploy_on_push: true
+  build_command: pip install -r requirements.txt
+  run_command: gunicorn s:app 

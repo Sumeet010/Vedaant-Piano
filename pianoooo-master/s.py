@@ -141,5 +141,5 @@ def stop_note():
         return jsonify({'error': 'Note not found'}), 404
 
 if __name__ == '__main__':
-    # For production, disable debug mode
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
